@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # usevux
 
 > A Vue.js project
@@ -19,3 +20,6 @@ npm run build --report
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# useVux
+>>>>>>> 006bdc058725714de4cb75026d4d7cc4d82ce17c
