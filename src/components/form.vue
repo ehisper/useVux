@@ -1,28 +1,31 @@
 <template>
 	<div class="form">
-		  	<group :title="'use cell-form-preview'">
-		    	<cell title="Total" value="￥1024"></cell>
-		    	<cell-form-preview :list="list" :border-intent="false"></cell-form-preview>
-		  	</group>
-		  	<group :title="'use is-link to show arrow'">
-			      	<cell is-link>
-			        	<span slot="title" style="color:green;"><span style="vertical-align:middle;">{{ 'Important News' }}</span> <badge text="1"></badge></span>
-			      	</cell>
-			      	<cell :title="'General'" 
-			      		is-link
-				      :border-intent="false"
-				      :arrow-direction="showContent001 ? 'up' : 'down'"
-				      @click.native="showContent001 = !showContent001">
-			        	<img slot="icon" width="20" style="display:block;margin-right:5px;" src="data:image/  png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/  t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/  OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/  iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/  pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
-			        </cell>
-				    <template v-if="showContent001">
-				        <cell-box :border-intent="false" class="sub-item" is-link>content 001</cell-box>
-					    <cell :title="'Go to Radio Demo'" link="/Dialog" inline-desc='link="/Dialog"'></cell>
-				    </template>
-		    </group>
+			<button @click="cellShow=!cellShow">cell</button>
+		  	<div v-if="cellShow">
+		  		<group  :title="'use cell-form-preview'">
+			    	<cell title="Total" value="￥1024"></cell>
+			    	<cell-form-preview :list="list" :border-intent="false"></cell-form-preview>
+			  	</group>
+			  	<group  :title="'use is-link to show arrow'">
+				      	<cell is-link>
+				        	<span slot="title" style="color:green;"><span style="vertical-align:middle;">{{ 'Important News' }}</span> <badge text="1"></badge></span>
+				      	</cell>
+				      	<cell :title="'General'" 
+				      		is-link
+					      :border-intent="false"
+					      :arrow-direction="showContent001 ? 'up' : 'down'"
+					      @click.native="showContent001 = !showContent001">
+				        	<img slot="icon" width="20" style="display:block;margin-right:5px;" src="data:image/  png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/  t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/  OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/  iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/  pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
+				        </cell>
+					    <template v-if="showContent001">
+					        <cell-box :border-intent="false" class="sub-item" is-link>content 001</cell-box>
+						    <cell :title="'Go to Radio Demo'" link="/Dialog" inline-desc='link="/Dialog"'></cell>
+					    </template>
+			    </group>
+		  	</div>
 			
-			
-			<div class="box">
+			<button @click="checkerShow=!checkerShow">checker</button>
+			<div v-if="checkerShow" class="box">
 			    <divider>{{ 'radio:no default value' }} {{demo5}}</divider>
     			<checker
 					    v-model="demo5"
@@ -41,15 +44,30 @@
 			      <br>
 			      <span>{{ 'current value is' }}: {{demo22}}</span>
 			</div>
+
+			<!-- <group :title="'group title'" :titleColor="'green'" :labelWidth="'50px'" :labelAlign="left" :labelMarginRight="'100px'">
+				 <cell title="Cell" value="value" is-link value-align="left"></cell>
+			</group> -->
+			<div>
+				<group>
+					<x-address @on-hide="logHide" @on-show="logShow" title="title" v-model="valueAddress" :list="addressData" raw-value="false" placeholder="请选择地址" inline-desc="可以设置placeholder" hide-district></x-address>
+      				<cell title="上面value值" :value="valueAddress"></cell>
+				</group>
+			</div>
 	</div>		
 </template>
 
 <script>
-import { CellFormPreview, Group, Cell , Badge ,CellBox,Checker, CheckerItem, Divider,Popup} from 'vux'
+import { CellFormPreview, Group, Cell , Badge ,CellBox,Checker, CheckerItem, Divider,Popup,XAddress, ChinaAddressV3Data} from 'vux'
+console.log(ChinaAddressV3Data)
 export default {
 	name: 'Dialog',
 	data () {
 		return {
+			cellShow:false,
+			checkerShow:false,
+			valueAddress:[],
+			addressData: ChinaAddressV3Data,
 			list: [{
 		        label: 'Apple',
 		        value: '3.29'
@@ -82,7 +100,13 @@ export default {
 	methods:{
 		onItemClick(itemValue, itemDisabled) {
 			
-		}
+		},
+		logHide (str) {
+	      console.log('on-hide', str)
+	    },
+	    logShow (str) {
+	      console.log('on-show')
+	    }
 	},
 
 	mounted () {
@@ -93,7 +117,7 @@ export default {
 	    Cell,
 	    Badge,
 	    CellBox,
-	    Checker, CheckerItem, Divider,Popup
+	    Checker, CheckerItem, Divider,Popup,XAddress, ChinaAddressV3Data
 	}
 }
 </script>
