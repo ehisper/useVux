@@ -46,7 +46,15 @@
 				    </checker>
 				      <br>
 				      <span>{{ 'current value is' }}: {{demo22}}</span>
+
 				</div>
+
+				<group title="fill mode with custom placeholder and label">
+			      <radio fill-mode fill-label="Other" fill-placeholder="填写其他的哦" :options="radio001" v-model="radio001Value" @on-change="changeRadio" disabled></radio>
+			    </group>
+			    <group title="object options">
+			      <radio  :options="radio003" @on-change="changeRadio" v-model="radio002Value"></radio>
+			    </group>
 
 				<checklist :title="'handle errors'" required :options="commonList"  v-model="checklist0011" @on-change="change" show-error @on-error="onError" @on-clear-error="onNoError" name="demo1" :max="2">
 			      	<p slot="footer" v-show="error" class="error">{{error}}</p>
@@ -75,19 +83,98 @@
 					@on-clear="clearValue"
 			      	@on-change="change" ></datetime>
 			    </group>
+
+			    <inline-calendar
+					  class="inline-calendar-demo"
+					  :show.sync="showCalendar"
+					  v-model="valueCalendar"
+					  start-date="2016-04-01"
+					  end-date="2018-05-30"
+					  :range="rangeCalendar"
+					  :show-last-month="showLastMonth"
+					  :show-next-month="showNextMonth"
+					  :highlight-weekend="highlightWeekend"
+					  :return-six-rows="return6Rows"
+					  :hide-header="hideHeader"
+					  :hide-week-list="hideWeekList"
+					  :replace-text-list="replaceTextList"
+					  :weeks-list="weeksList"
+					  :render-function="buildSlotFn"
+					  :disable-past="disablePast"
+					  :disable-future="disableFuture"
+					  @on-change="changCalendar">
+				</inline-calendar>
+				<cell title="current valueCalendar" :value="valueCalendar"></cell>
+				<group title="control days" style="margin-top: 30px;">
+				    <x-switch v-model="disablePast" title="Disable Past"></x-switch>
+				    <x-switch v-model="disableFuture" title="Disable Future"></x-switch>
+				    <x-switch v-model="showLastMonth" title="Show Last Month"></x-switch>
+				    <x-switch v-model="showNextMonth" title="Show Next Month"></x-switch>
+				    <x-switch v-model="return6Rows" inline-desc="if not, the calendar's height would change" title="Always show 6 rows"></x-switch>
+				    <x-switch v-model="highlightWeekend" title="highlight weekend"></x-switch>
+				    <x-switch v-model="hideHeader" title="Hide header"></x-switch>
+				    <x-switch v-model="hideWeekList" title="Hide week list"></x-switch>
+				    <x-switch v-model="changeWeeksList" title="Change weeks list"></x-switch>
+				    <x-switch v-model="replace" title="Replace date text"></x-switch>
+				    <x-button type="primary" @click.native="valueCalendar='TODAY'">Set time to today</x-button>
+				    <x-switch v-model="useCustomFn" inline-desc="Add red dot for dates with 8" title="add custom contents in day cell"></x-switch>
+				</group>
 			</div>
 			<div v-if="showFormPreview">
-					<form-preview :header-label="'付款金额'" header-value="¥2400.00" :body-items="list" :footer-buttons="buttons1" name="FormPreview"></form-preview>
+				<form-preview :header-label="'付款金额'" header-value="¥2400.00" :body-items="list" :footer-buttons="buttons1" name="FormPreview"></form-preview>
 			</div>
 			<div v-if="showPicker">
-				
+				<group>
+			      <popup-radio readonly title="options" :options="options1" v-model="option1"></popup-radio>
+			    </group>
+			     <group>
+			    <popup-radio title="slot:each-item" :options="options3" v-model="option5">
+			    	<p slot="popup-header" class="vux-1px-b demo3-slot">Please select</p>
+			        <template scope="props" slot="each-item">
+			          <p>
+			            custom item <img src="http://dn-placeholder.qbox.me/110x110/FF2D55/000" class="vux-radio-icon"> {{ props.label }}
+			            <br>
+			            <span style="color:#666;">{{ props.index + 1 }} another line</span>
+			          </p>
+			        </template>
+			      </popup-radio>
+			    </group>
+
+				<group-title>双向绑定</group-title>
+			    <picker :data='years' v-model='year3' @on-change='change3'></picker>
+			    <select v-model='year5'>
+			        <option v-for='one in years[0]' :value='one.value'>{{one.name}}</option>
+			    </select>
+
+				<group title="one columns">
+			       <popup-picker :title="'手机'" :data="list1" v-model="value1" :placeholder="'请选择手机'"></popup-picker>
+			    </group>
+				<group title="double columns">
+			       <popup-picker :title="'详细机型'" :data="list2" v-model="value2"></popup-picker>
+			    </group>
+			    <group title="double columns-obj">
+			       <popup-picker :title="'对象显示文字值为code'" :data="list5" :columns="1" v-model="value5" show-name></popup-picker>
+			    </group>
+			    <group title="chained three columns">
+			       <popup-picker :title="'联动显示值'" :data="list3" :columns="3" v-model="value3" ref="picker3"></popup-picker>
+			       <cell title="获取值对应的文字" :value="$refs.picker3&&$refs.picker3.getNameValues()"></cell>
+			       <popup-picker :title="'联动显示文字值为code'" :data="list3" :columns="3"  v-model="value4" show-name></popup-picker>
+			    </group>
+
 			</div>
 
 	</div>		
 </template>
 
 <script>
-import { CellFormPreview, Group, Cell , Badge ,CellBox,Checker, CheckerItem,Checklist,DatetimeRange ,Datetime,XButton ,FormPreview, InlineCalendar ,Divider,Popup} from 'vux'
+import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,Checker,Radio, CheckerItem,Checklist,DatetimeRange ,Datetime,InlineCalendar,XSwitch,XButton ,FormPreview ,Divider,Picker,Popup,PopupPicker,PopupRadio} from 'vux'
+	let years = []
+	for (var i = 2000; i <= 2030; i++) {
+	  years.push({
+	    name: i + '年',
+	    value: i + ''
+	  })
+	}
 export default {
 	name: 'Dialog',
 	data () {
@@ -119,6 +206,18 @@ export default {
 		        value: 'C'
 		      }],
 		    labelPosition:'',//left
+		    radio001Value: 'China',
+		    radio001: [ 'China', 'Japan' ],
+		    radio002Value: '',
+		    radio003: [{
+		        icon: 'http://dn-placeholder.qbox.me/110x110/FF2D55/000',
+		        key: '001',
+		        value: 'radio001'
+		      }, {
+		        icon: 'http://dn-placeholder.qbox.me/110x110/FF2D55/000',
+		        key: '002',
+		        value: 'radio002'
+		      }],
 			checklist0011:[],
 			checklist002:['China'],
 			commonList:[ 'China', 'Japan', 'America' ],
@@ -129,6 +228,33 @@ export default {
 		        {key: '3', value: 'camel is best, no inline-desc'}
 		    ],
 		    inlineDescListValue: [1],
+
+		    showCalendar:true,
+		    valueCalendar: '',
+		    // listValue: '',
+		    rangeCalendar: false,
+		    showLastMonth: true,
+		    showNextMonth: true,
+		    highlightWeekend: false,
+		    return6Rows: true,
+		    hideHeader: false,
+		    hideWeekList: false,
+		    replaceTextList: {},
+		    replace: false,
+		    changeWeeksList: false,
+		    weeksList: [],
+		    useCustomFn: false,
+		    // buildSlotFn: () =>  '',
+		    buildSlotFn:function(h,l,d){
+		    	if(h==3 && l==3){
+		    		console.log(d)
+		    		return 'good'
+		    	}
+		    },
+		    disablePast: false,
+		    disableFuture: false,
+
+
 		    showDateTime:false,
 		    value: ['2017-01-15', '03', '05'],
 		    startDate: '2015-11-11',
@@ -161,7 +287,81 @@ export default {
 		        }
 		    }],
 		    showPicker: false,
-
+		    years: [years],
+		    year3: ['2005'],
+		    year5: '2005',
+		    list1: [['小米', 'iPhone', '华为', '情怀', '三星', '其他', '不告诉你']],
+		    value1: [],
+		    list2: [['小米', 'iPhone', '华为', '情怀', '三星', '其他', '不告诉你'], ['小米1', 'iPhone2', '华为3', '情怀4', '三星5', '其他6', '不告诉你7']],
+		    value2: ['iPhone', '华为3'],
+		    list3: [{
+				        name: '中国',
+				        value: 'china',
+				        parent: 0
+				      }, {
+				        name: '美国',
+				        value: 'USA',
+				        parent: 0
+				      }, {
+				        name: '广东',
+				        value: 'china001',
+				        parent: 'china'
+				      }, {
+				        name: '广西',
+				        value: 'china002',
+				        parent: 'china'
+				      }, {
+				        name: '美国001',
+				        value: 'usa001',
+				        parent: 'USA'
+				      }, {
+				        name: '美国002',
+				        value: 'usa002',
+				        parent: 'USA'
+				      }, {
+				        name: '广州',
+				        value: 'gz',
+				        parent: 'china001'
+				      }, {
+				        name: '深圳',
+				        value: 'sz',
+				        parent: 'china001'
+				      }, {
+				        name: '广西001',
+				        value: 'gx001',
+				        parent: 'china002'
+				      }, {
+				        name: '广西002',
+				        value: 'gx002',
+				        parent: 'china002'
+				      }, {
+				        name: '美国001_001',
+				        value: '0003',
+				        parent: 'usa001'
+				      }, {
+				        name: '美国001_002',
+				        value: '0004',
+				        parent: 'usa001'
+				      }, {
+				        name: '美国002_001',
+				        value: '0005',
+				        parent: 'usa002'
+				      }, {
+				        name: '美国002_002',
+				        value: '0006',
+				        parent: 'usa002'
+				      }],
+			value3: [],
+			value4: [],
+			list5:[
+					{name: '中国',value: 'china',},
+					{name: '美国', value: 'USA',}
+			],
+			value5: [],
+			option1: 'A',
+      		options1: ['A', 'B', 'C'],
+      		 options3: ['A', 'B', 'C'],
+      		option5: 'B'
 		}
 			
 	},
@@ -175,6 +375,12 @@ export default {
 		change(){
 
 		},
+		changCalendar(v){
+			console.log('changCalendar:', v)
+		},
+		changeRadio (value, label) {
+	      console.log('change:', value, label)
+	    },
 		clearValue (value) {
 	      this.$data.minuteListValue = ''
 	    },
@@ -202,18 +408,38 @@ export default {
 		          console.log('plugin hide')
 		        }
 		      })
-		    },
+		},
+		change3 (value) {
+			console.log('new years is',value)
+	      this.year5 = value[0]
+	    },
+
 	},
 
 	mounted () {
 	},
+	watch:{
+		replace (val) {
+	      this.replaceTextList = val ? {
+	        // 'TODAY': '今'
+	        'TOMORROW': '今'
+	      } : {}
+	    },
+		useCustomFn (val) {
+	      this.buildSlotFn = val ? (line, index, data) => {
+	        return /8/.test(data.date) ? '<div style="font-size:12px;text-align:center;"><span style="display:inline-block;width:5px;height:5px;background-color:red;border-radius:50%;"></span></div>' : '<div style="height:19px;"></div>'
+	      } : () => ''
+	    },
+	},
 	components: {
 		CellFormPreview,
-	    Group,
+	    Group,GroupTitle,
 	    Cell,
 	    Badge,
 	    CellBox,
-	    Checker, CheckerItem, Checklist,DatetimeRange,Datetime,XButton,FormPreview,InlineCalendar ,Divider,Popup
+	    Checker,Radio, CheckerItem, Checklist,DatetimeRange,Datetime,InlineCalendar,XSwitch,
+	    XButton,FormPreview,InlineCalendar ,Divider,
+	    Popup,Picker,PopupPicker,PopupRadio
 	}
 }
 </script>
