@@ -5,6 +5,7 @@
 			<button @click="showDateTime = !showDateTime">DateTime</button>
 			<button @click="showFormPreview = !showFormPreview">FormPreview</button>
 			<button @click="showPicker = !showPicker">Picker</button>
+			<button @click="showRange = !showRange">Range</button>
 		  	<div v-if="showCell">
 		  		<group :title="'use cell-form-preview'">
 		    	<cell title="Total" value="￥1024"></cell>
@@ -28,6 +29,7 @@
 			    </group>
 		  	</div>
 			<div v-if="showCheck">	
+
 				<div class="box">
 				    <divider>{{ 'radio:no default value' }} {{demo5}}</divider>
 	    			<checker
@@ -160,14 +162,24 @@
 			       <cell title="获取值对应的文字" :value="$refs.picker3&&$refs.picker3.getNameValues()"></cell>
 			       <popup-picker :title="'联动显示文字值为code'" :data="list3" :columns="3"  v-model="value4" show-name></popup-picker>
 			    </group>
-
+	
 			</div>
-
+			<div v-if="showRange">
+				<cell title="range" primary="content">
+			        <range v-model="rangeValue" :min="rangeMin" :max="rangeMax" :step="rangeStep"></range>
+			    </cell>
+			</div>
+				
 	</div>		
 </template>
 
 <script>
-import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,Checker,Radio, CheckerItem,Checklist,DatetimeRange ,Datetime,InlineCalendar,XSwitch,XButton ,FormPreview ,Divider,Picker,Popup,PopupPicker,PopupRadio} from 'vux'
+import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,
+	Checker,Radio, CheckerItem,Checklist,
+	DatetimeRange ,Datetime,InlineCalendar,
+	XSwitch,XButton ,FormPreview ,Divider,
+	Picker,Popup,PopupPicker,PopupRadio,
+	Range} from 'vux'
 	let years = []
 	for (var i = 2000; i <= 2030; i++) {
 	  years.push({
@@ -360,8 +372,14 @@ export default {
 			value5: [],
 			option1: 'A',
       		options1: ['A', 'B', 'C'],
-      		 options3: ['A', 'B', 'C'],
-      		option5: 'B'
+      		options3: ['A', 'B', 'C'],
+      		option5: 'B',
+
+      		showRange: false,
+      		rangeValue: null,
+      		rangeMax: 100,
+      		rangeMin: 0,
+      		rangeStep: 3,
 		}
 			
 	},
@@ -439,7 +457,8 @@ export default {
 	    CellBox,
 	    Checker,Radio, CheckerItem, Checklist,DatetimeRange,Datetime,InlineCalendar,XSwitch,
 	    XButton,FormPreview,InlineCalendar ,Divider,
-	    Popup,Picker,PopupPicker,PopupRadio
+	    Popup,Picker,PopupPicker,PopupRadio,
+	    Range 
 	}
 }
 </script>
