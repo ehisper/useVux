@@ -29,7 +29,10 @@
 			    </group>
 		  	</div>
 			<div v-if="showCheck">	
-
+				<group title='multi selector'>
+			      <selector placeholder="请选择省份" title="省份" :options="listSelector"></selector>
+			      <selector v-model="valueSelector" title="省份" :options="listSelector"  @on-change="change"></selector>
+			    </group>
 				<div class="box">
 				    <divider>{{ 'radio:no default value' }} {{demo5}}</divider>
 	    			<checker
@@ -164,22 +167,45 @@
 			    </group>
 	
 			</div>
-			<div v-if="showRange">
-				<cell title="range" primary="content">
-			        <range v-model="rangeValue" :min="rangeMin" :max="rangeMax" :step="rangeStep"></range>
+
+			<button @click="showRater = !showRater">Rater</button>
+			<div v-if="showRater">
+				<cell title="Smilies">
+			        <rater v-model="dataRater" slot="value" star="☻" active-color="#FF9900" :margin="4" :max="6" :font-size="25"></rater>
 			    </cell>
 			</div>
-				
+			<button @click="showSearch = !showSearch">Search</button>
+			<div v-if="showSearch">
+				<img src="../assets/logo.png" height="200" width="200" alt="">
+				<search
+					    @result-click="resultClickSearch"
+					    @on-change="getResultSearch"
+					    :results="resultsSearch"
+					    v-model="valueSearch"
+					    position="absolute"
+					    auto-scroll-to-top top="46px"
+					    @on-focus="onFocusSearch"
+					    @on-cancel="onCancelSearch"
+					    @on-submit="onSubmitSearch"
+					    ref="search">
+				</search>
+				<x-button @click.native="setFocusSearch" type="primary">set focus</x-button>
+			</div>
+			<button @click="showAddress = !showAddress">Address</button>
+			<div v-if="showAddress">
+				<group>
+			      <x-address title="只显示省市" v-model="valueAddress" raw-value :list="addressData" hide-district></x-address>
+			      <cell title="value值" :value="valueAddress"></cell>
+			      <cell title="转换成文字值" :value="getNameAddress(valueAddress)"></cell>
+			    </group>
+			</div>
 	</div>		
 </template>
 
 <script>
-import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,
-	Checker,Radio, CheckerItem,Checklist,
-	DatetimeRange ,Datetime,InlineCalendar,
-	XSwitch,XButton ,FormPreview ,Divider,
-	Picker,Popup,PopupPicker,PopupRadio,
-	Range} from 'vux'
+import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,Checker,Radio,Selector, CheckerItem,Checklist,DatetimeRange ,Datetime,InlineCalendar,XSwitch,XButton ,FormPreview ,Divider,Picker,Popup,PopupPicker,PopupRadio,
+	Rater,Search,XAddress, ChinaAddressV3Data,Value2nameFilter as value2name} from 'vux'
+
 	let years = []
 	for (var i = 2000; i <= 2030; i++) {
 	  years.push({
@@ -375,11 +401,15 @@ export default {
       		options3: ['A', 'B', 'C'],
       		option5: 'B',
 
-      		showRange: false,
-      		rangeValue: null,
-      		rangeMax: 100,
-      		rangeMin: 0,
-      		rangeStep: 3,
+      		showRater: false,
+      		dataRater: 3.6,
+      		showSearch:false,
+      		resultsSearch: [],
+      		valueSearch: 'test',
+      		listSelector: [{key: 'gd', value: '广东'}, {key: 'gx', value: '广西'}],
+      		valueSelector:'gd',
+      		showAddress:false,
+      		valueAddress:[],
 		}
 			
 	},
@@ -431,7 +461,32 @@ export default {
 			console.log('new years is',value)
 	      this.year5 = value[0]
 	    },
-
+	    setFocusSearch () {
+	      this.$refs.search.setFocus()
+	    },
+	    resultClickSearch (item) {
+	      window.alert('you click the result item: ' + JSON.stringify(item))
+	    },
+	    getResultSearch (val) {
+	      this.resultsSearch = val ? getResult(this.valueSearch) : []
+	    },
+	    onSubmitSearch () {
+	      this.$refs.search.setBlur()
+	      this.$vux.toast.show({
+	        type: 'text',
+	        position: 'top',
+	        text: 'on submit'
+	      })
+	    },
+	    onFocusSearch () {
+	      console.log('Search on focus')
+	    },
+	    onCancelSearch () {
+	      console.log('Search on cancel')
+	    },
+	    getNameAddress (value) {
+	      return value2name(value, ChinaAddressV3Data)
+	    },
 	},
 
 	mounted () {
@@ -458,8 +513,18 @@ export default {
 	    Checker,Radio, CheckerItem, Checklist,DatetimeRange,Datetime,InlineCalendar,XSwitch,
 	    XButton,FormPreview,InlineCalendar ,Divider,
 	    Popup,Picker,PopupPicker,PopupRadio,
-	    Range 
+	    Rater,Search,Selector,XAddress, ChinaAddressV3Data,
 	}
+}
+function getResult (val) {
+  let rs = []
+  for (let i = 0; i < 20; i++) {
+    rs.push({
+      title: `${val} result: ${i + 1} `,
+      other: i
+    })
+  }
+  return rs
 }
 </script>
 <style scoped>
