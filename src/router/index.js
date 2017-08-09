@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Dialog from '@/components/Dialog'
 import Form from '@/components/Form'
+import LayOut from '@/components/LayOut'
 
 // import { WechatPlugin } from 'vux'
 // Vue.use(WechatPlugin)
@@ -41,6 +42,11 @@ export default new Router({
       path: '/Form',
       name: 'Form',
       component: Form
+    },
+    {
+      path: '/LayOut',
+      name: 'LayOut',
+      component: LayOut
     }
     //code splitting按需加载代码写法
  	// {

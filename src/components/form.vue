@@ -6,6 +6,11 @@
 			<button @click="showFormPreview = !showFormPreview">FormPreview</button>
 			<button @click="showPicker = !showPicker">Picker</button>
 			<button @click="showRange = !showRange">Range</button>
+			<button @click="showAddress = !showAddress">Address</button>
+			<button @click="showRater = !showRater">Rater</button>
+			<button @click="showXButton = !showXButton">XButton</button>
+			<button @click="showXInput = !showXInput">XInput</button>
+
 		  	<div v-if="showCell">
 		  		<group :title="'use cell-form-preview'">
 		    	<cell title="Total" value="￥1024"></cell>
@@ -168,7 +173,7 @@
 	
 			</div>
 
-			<button @click="showRater = !showRater">Rater</button>
+			
 			<div v-if="showRater">
 				<cell title="Smilies">
 			        <rater v-model="dataRater" slot="value" star="☻" active-color="#FF9900" :margin="4" :max="6" :font-size="25"></rater>
@@ -191,7 +196,6 @@
 				</search>
 				<x-button @click.native="setFocusSearch" type="primary">set focus</x-button>
 			</div>
-			<button @click="showAddress = !showAddress">Address</button>
 			<div v-if="showAddress">
 				<group>
 			      <x-address title="只显示省市" v-model="valueAddress" raw-value :list="addressData" hide-district></x-address>
@@ -199,12 +203,69 @@
 			      <cell title="转换成文字值" :value="getNameAddress(valueAddress)"></cell>
 			    </group>
 			</div>
+			<div v-if="showRange">
+				<cell title="range" primary="content">
+			        <range v-model="rangeValue" :min="rangeMin" :max="rangeMax" :step="rangeStep"></range>
+			    </cell>
+			</div>
+			<div v-if="showXButton">
+				<flexbox>
+			        <flexbox-item>
+			          <x-button type="default">default</x-button>
+			        </flexbox-item>
+			        <flexbox-item>
+			          <x-button type="primary" :text="'primary'"  @click.native="change" show-loading link="/Hello"></x-button>
+			        </flexbox-item>
+			        <flexbox-item>
+			          <x-button type="warn" link="BACK">Back</x-button>
+			        </flexbox-item>
+			    </flexbox>
+			</div>
+			<div v-if="showXInput">
+				<group title="禁用内置验证及显示成功或者错误样式">
+			      	<x-input title="禁用验证" placeholder="I'm placeholder" novalidate :icon-type="'success'" :show-clear="false" :debounce="500" @on-blur="change" @on-change="change"  @on-focus="change"placeholder-align="right"></x-input>
+			    </group>
+				<group title="set is-type=china-name">
+			      <x-input title="姓名" name="username" placeholder="请输入姓名" is-type="china-name" :icon-type="'success'" :show-clear="false" required></x-input>
+			    </group>
+			    <group title="set keyboard=number and is-type=china-mobile">
+			      <x-input title="手机号码" name="mobile" placeholder="请输入手机号码" keyboard="number" is-type="china-mobile"></x-input>
+			    </group>
+			    <group title="set is-type=email">
+			      <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email"></x-input>
+			    </group>
+			    <group title="set min=2 and max=5">
+			      <x-input title="2-5个字符" placeholder="" :min="2" :max="5"></x-input>
+			    </group>
+			    <group title="验证码" class="weui-cells_form">
+				      <x-input title="验证码" class="weui-cell_vcode" v-model="valueCode">
+				        <img slot="right" class="weui-vcode-img" src="http://weui.github.io/weui/images/vcode.jpg">
+				      </x-input>
+				      <x-input title="发送验证码" class="weui-vcode">
+				        <x-button slot="right" type="primary" mini>发送验证码</x-button>
+				      </x-input>
+				      <x-input title="请确认验证码" v-model="valueCode2" type="text" placeholder="" :equal-with="valueCode"></x-input>
+			    </group>
+			     <group :title="'round style'">
+			      	<x-number :title="'Quantity'" v-model="roundValue" button-style="round" :min="0" :max="5" @on-change="change" fillable :step="0.5" width="100px"></x-number>
+			    </group>
+			    <group>
+			      <x-textarea :max="100" :placeholder="'placeholder'" @on-focus="change" @on-blur="change" :show-counter="true" :rows="1" :cols="10" autosize></x-textarea>
+			    </group>
+			</div>
 	</div>		
 </template>
 
 <script>
-import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,Checker,Radio,Selector, CheckerItem,Checklist,DatetimeRange ,Datetime,InlineCalendar,XSwitch,XButton ,FormPreview ,Divider,Picker,Popup,PopupPicker,PopupRadio,
-	Rater,Search,XAddress, ChinaAddressV3Data,Value2nameFilter as value2name} from 'vux'
+import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,
+	Checker,Radio,Selector, CheckerItem,Checklist,
+	DatetimeRange ,Datetime,InlineCalendar,
+	XSwitch,FormPreview ,Divider,
+	Picker,Popup,PopupPicker,PopupRadio,
+	Range,
+	Rater,Search,XAddress, ChinaAddressV3Data,Value2nameFilter as value2name,
+	XButton,Flexbox, FlexboxItem,
+	XInput,XNumber,XTextarea} from 'vux'
 
 	let years = []
 	for (var i = 2000; i <= 2030; i++) {
@@ -410,6 +471,15 @@ export default {
       		valueSelector:'gd',
       		showAddress:false,
       		valueAddress:[],
+      		showRange: false,
+      		rangeValue: null,
+      		rangeMax: 100,
+      		rangeMin: 0,
+      		rangeStep: 3,
+      		showXButton: false,
+      		showXInput: false,
+      		valueCode: null,
+      		valueCode2: null,
 		}
 			
 	},
@@ -511,9 +581,11 @@ export default {
 	    Badge,
 	    CellBox,
 	    Checker,Radio, CheckerItem, Checklist,DatetimeRange,Datetime,InlineCalendar,XSwitch,
-	    XButton,FormPreview,InlineCalendar ,Divider,
+	   	FormPreview,InlineCalendar ,Divider,
 	    Popup,Picker,PopupPicker,PopupRadio,
 	    Rater,Search,Selector,XAddress, ChinaAddressV3Data,
+	    Range,XButton,Flexbox, FlexboxItem,
+	    XInput,XNumber,XTextarea
 	}
 }
 function getResult (val) {
