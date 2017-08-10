@@ -135,8 +135,9 @@
 
 <script>
 import {  Tab, TabItem,Sticky ,Badge,Flexbox, FlexboxItem, Blur,Card,
- Cell,Group,XSwitch ,Grid,GridItem} from 'vux'
-
+ Cell,Group,XSwitch ,Grid,GridItem,
+ XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem,
+		ViewBox,Tabbar} from 'vux'
 export default {
 	name: 'LatOut',
 	data () {
@@ -166,7 +167,13 @@ export default {
 		clickHandler () {
 			// this.$refs.viewBox.scrollTo()
 			console.log(this.$refs.viewBox.getScrollBody())
-		}
+		},
+		spaceChange () {
+	      this.showSpace = !this.showSpace
+	      this.$nextTick(() => {
+	        // this.$refs.sticky.bindSticky()//没试出来
+	      })
+    	},
 	},
 	directives:{
 		TransferDom
@@ -176,16 +183,21 @@ export default {
 	watch:{
 	},
 	components: {
-		 Tab, TabItem,Sticky ,
-		 Badge, Cell, 
-		 Flexbox, FlexboxItem, Blur,Card,
-		Group,XSwitch ,Grid,GridItem
+		Tab, TabItem,Sticky ,Badge,Flexbox, FlexboxItem, Blur,Card,
+ 		Cell,Group,XSwitch ,Grid,GridItem,
+ 		XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem,
+		ViewBox,Tabbar
 	}
 }
 </script>
 <style scoped lang="less">
 	@import '~vux/src/styles/1px.less';
 	@import '~vux/src/styles/close.less';
+	html, body {
+	    height: 100%;
+	    width: 100%;
+	    overflow-x: hidden;
+	  }
 	.badge-value {
 	  display: inline-block!important;
 	}
