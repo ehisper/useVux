@@ -1,6 +1,68 @@
 <template>
 	<div class="layout">
-		
+		<group>
+		    <x-switch title="showSticky" v-model="showSticky"></x-switch>
+		</group>
+		<group>
+		    <x-switch title="showBadge" v-model="showBadge"></x-switch>
+		</group>
+		<group>
+		    <x-switch title="showGrid" v-model="showGrid"></x-switch>
+		    <x-switch title="showXHeader" v-model="showXHeader"></x-switch>
+		    <x-switch title="showViewBox" v-model="showViewBox"></x-switch>
+		</group>
+		<group>
+		    <x-switch title="showBlur" v-model="showBlur"></x-switch>
+		</group>
+		<group>
+		    <x-switch title="showCard" v-model="showCard"></x-switch>
+		</group>
+		<div v-if="showGrid">
+			<grid :rows="5">
+		      	<grid-item v-for="i in 5" :key="i" link="/Form">
+			        <span class="grid-center vux-close vux-1px">{{i}}</span>
+			    </grid-item>
+		    </grid>
+		</div>
+		<div v-if="showXHeader">		
+			<x-header :title="'xheader'" 
+				:left-options="{showBack: true,backText: '返回',preventGoBack: false}"
+				:right-options="{showMore: true}" 
+				@on-click-more="showMenus = true"
+				@on-click-back="showMenus = true"
+				@on-click-title="showMenus = true">
+			</x-header>
+			<x-header title="slot:overwrite-title">
+		      <div class="overwrite-title-demo" slot="overwrite-title">
+		        <button-tab>
+		          <button-tab-item selected>A</button-tab-item>
+		          <button-tab-item>B</button-tab-item>
+		        </button-tab>
+		      </div>
+		    </x-header>
+			<div v-transfer-dom>
+		      	<actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
+		    </div>
+
+		</div>
+		<div v-if="showViewBox" style="height:100%;" ref="showViewBox">
+			<view-box ref="viewBox" body-padding-top="60px" body-padding-bottom="60px" >
+			     <x-header slot="header" style="width:100%;position:absolute;left:0;top:0;z-index:100;"></x-header>
+			     <div>
+			     	<div style="height:60px;" >中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;" @click="clickHandler">click中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     	<div style="height:60px;">中间部分</div>
+			     </div>
+			     <tabbar slot="bottom"></tabbar>
+		   </view-box>
+		</div>
 		<div v-if="showSticky">
 			<div class="space-btn" @click="spaceChange">显示间隔</div>
 		    <div class="space" v-if="showSpace">间隔</div>
@@ -67,69 +129,6 @@
 		      </div>
 		    </card>
 		</div>
-		<group>
-		    <x-switch title="showSticky" v-model="showSticky"></x-switch>
-		</group>
-		<group>
-		    <x-switch title="showBadge" v-model="showBadge"></x-switch>
-		</group>
-		<group>
-		    <x-switch title="showGrid" v-model="showGrid"></x-switch>
-		    <x-switch title="showXHeader" v-model="showXHeader"></x-switch>
-		    <x-switch title="showViewBox" v-model="showViewBox"></x-switch>
-		</group>
-		<group>
-		    <x-switch title="showBlur" v-model="showBlur"></x-switch>
-		</group>
-		<group>
-		    <x-switch title="showCard" v-model="showCard"></x-switch>
-		</group>
-		<div v-if="showGrid">
-			<grid :rows="5">
-		      	<grid-item v-for="i in 5" :key="i" link="/Form">
-			        <span class="grid-center vux-close vux-1px">{{i}}</span>
-			    </grid-item>
-		    </grid>
-		</div>
-		<div v-if="showXHeader">		
-			<x-header :title="'xheader'" 
-				:left-options="{showBack: true,backText: '返回',preventGoBack: false}"
-				:right-options="{showMore: true}" 
-				@on-click-more="showMenus = true"
-				@on-click-back="showMenus = true"
-				@on-click-title="showMenus = true">
-			</x-header>
-			<x-header title="slot:overwrite-title">
-		      <div class="overwrite-title-demo" slot="overwrite-title">
-		        <button-tab>
-		          <button-tab-item selected>A</button-tab-item>
-		          <button-tab-item>B</button-tab-item>
-		        </button-tab>
-		      </div>
-		    </x-header>
-			<div v-transfer-dom>
-		      	<actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
-		    </div>
-
-		</div>
-		<div v-if="showViewBox" style="height:100%;" ref="showViewBox">
-			<view-box ref="viewBox" body-padding-top="60px" body-padding-bottom="60px" >
-			     <x-header slot="header" style="width:100%;position:absolute;left:0;top:0;z-index:100;"></x-header>
-			     <div>
-			     	<div style="height:60px;" >中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;" @click="clickHandler">click中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     	<div style="height:60px;">中间部分</div>
-			     </div>
-			     <tabbar slot="bottom"></tabbar>
-		   </view-box>
-		</div>
 	</div>		
 </template>
 
@@ -161,6 +160,7 @@ export default {
 		        menu2: 'Choose from photos'
 		      },
 		    showViewBox: false,
+		}
 			
 	},
 	methods:{

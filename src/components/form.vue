@@ -135,6 +135,21 @@
 				<form-preview :header-label="'付款金额'" header-value="¥2400.00" :body-items="list" :footer-buttons="buttons1" name="FormPreview"></form-preview>
 			</div>
 			<div v-if="showPicker">
+				<div v-transfer-dom>
+				      <popup v-model="showPopup">
+				        <!-- group already has a top border, so we need to hide header's bottom border-->
+				        <popup-header
+				        :left-text="'cancel'"
+				        :right-text="'done'"
+				        :title="'Please select your card'"
+				        :show-bottom-border="false"
+				        @on-click-left="showPopup = false"
+				        @on-click-right="showPopup = false"></popup-header>
+				        <group gutter="0">
+				          <radio :options="[ 'Card 1', 'Card 2', 'Card 3', 'Card 4']"></radio>
+				        </group>
+				      </popup>
+			    </div>
 				<group>
 			      <popup-radio readonly title="options" :options="options1" v-model="option1"></popup-radio>
 			    </group>
@@ -262,7 +277,7 @@ import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,CheckIcon ,
 	Checker,Radio,Selector, CheckerItem,Checklist,
 	DatetimeRange ,Datetime,InlineCalendar,
 	XSwitch,FormPreview ,Divider,
-	Picker,Popup,PopupPicker,PopupRadio,
+	Picker,Popup,PopupHeader,PopupPicker,PopupRadio,TransferDom,
 	Range,
 	Rater,Search,XAddress, ChinaAddressV3Data,Value2nameFilter as value2name,
 	XButton,Flexbox, FlexboxItem,
@@ -328,7 +343,7 @@ export default {
 		        {key: '3', value: 'camel is best, no inline-desc'}
 		    ],
 		    inlineDescListValue: [1],
-
+		    showPopup: true,
 		    showCalendar:true,
 		    valueCalendar: '',
 		    // listValue: '',
@@ -560,7 +575,9 @@ export default {
 	      return value2name(value, ChinaAddressV3Data)
 	    },
 	},
-
+	directives:{
+		TransferDom
+	},
 	mounted () {
 	},
 	watch:{
@@ -584,7 +601,7 @@ export default {
 	    CellBox,CheckIcon ,
 	    Checker,Radio, CheckerItem, Checklist,DatetimeRange,Datetime,InlineCalendar,XSwitch,
 	   	FormPreview,InlineCalendar ,Divider,
-	    Popup,Picker,PopupPicker,PopupRadio,
+	    Popup,PopupHeader,Picker,PopupPicker,PopupRadio,TransferDom,
 	    Rater,Search,Selector,XAddress, ChinaAddressV3Data,
 	    Range,XButton,Flexbox, FlexboxItem,
 	    XInput,XNumber,XTextarea
