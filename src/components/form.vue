@@ -40,6 +40,7 @@
 			    </group>
 				<div class="box">
 				    <divider>{{ 'radio:no default value' }} {{demo5}}</divider>
+				    <check-icon :value.sync="demoCheckIcon">Do you agree? ({{ demoCheckIcon }})</check-icon>
 	    			<checker
 						    v-model="demo5"
 						    default-item-class="demo5-item"
@@ -257,7 +258,7 @@
 </template>
 
 <script>
-import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,
+import { CellFormPreview, Group,GroupTitle, Cell , Badge ,CellBox,CheckIcon ,
 	Checker,Radio,Selector, CheckerItem,Checklist,
 	DatetimeRange ,Datetime,InlineCalendar,
 	XSwitch,FormPreview ,Divider,
@@ -480,6 +481,7 @@ export default {
       		showXInput: false,
       		valueCode: null,
       		valueCode2: null,
+      		demoCheckIcon: false,
 		}
 			
 	},
@@ -579,7 +581,7 @@ export default {
 	    Group,GroupTitle,
 	    Cell,
 	    Badge,
-	    CellBox,
+	    CellBox,CheckIcon ,
 	    Checker,Radio, CheckerItem, Checklist,DatetimeRange,Datetime,InlineCalendar,XSwitch,
 	   	FormPreview,InlineCalendar ,Divider,
 	    Popup,Picker,PopupPicker,PopupRadio,
