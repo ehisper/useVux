@@ -191,6 +191,7 @@
 
 			
 			<div v-if="showRater">
+			<!-- 评分 -->
 				<cell title="Smilies">
 			        <rater v-model="dataRater" slot="value" star="☻" active-color="#FF9900" :margin="4" :max="6" :font-size="25"></rater>
 			    </cell>
