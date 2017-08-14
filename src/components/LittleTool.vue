@@ -172,9 +172,10 @@
 		      </cell>
 		    </group>
 		    <div>
-		   	 <x-circle :percent="percent1" :stroke-width="10" stroke-color="#04BE02">
+		   	 	<x-circle :percent="percent1" :stroke-width="10" stroke-color="#04BE02">
 		        <span>{{percent1}}</span>
 		      </x-circle>
+		       <x-progress :percent="percent2" :show-cancel="false"></x-progress>
 	   		</div>
 		</div>
 		<group>
@@ -292,12 +293,44 @@
 		      <emotion>{{item}}</emotion><emotion is-gif>{{item}}</emotion>
 		    </div>
 		</div>
-	   	<div>
+		<group>
+		    <x-switch title="showXImg" v-model="showXImg"></x-switch>
+		</group>
+	   	<div v-if="showXImg">
 	   		<div v-for="src in listXImg" style="background-color:yellow;text-align:center;">
 		      <span style="font-size:20px;">Loading</span>
 		      <x-img :src="src" :webp-src="`${src}?type=webp`" @on-success="success" @on-error="error" class="ximg-demo" error-class="ximg-error" :offset="-100" container="#vux_view_box_body"></x-img>
 		    </div>
 	   	</div>
+	   	<group>
+		    <x-switch title="showXTable" v-model="showXTable"></x-switch>
+		</group>
+		<div v-if="showXTable">
+		   	<div>	
+		   		<x-table :cell-bordered="false" :content-bordered="false" :full-bordered="false" style="background-color:#fff;">
+			        <thead>
+			          <tr style="background-color: #F7F7F7">
+			            <th>Product</th>
+			            <th>Price</th>
+			            <th>Quantity</th>
+			          </tr>
+			        </thead>
+			        <tbody>
+			          <tr>
+			            <td>Apple</td>
+			            <td>$1.25</td>
+			            <td> x 1</td>
+			          </tr>
+			          <tr>
+			            <td>Banana</td>
+			            <td>$1.20</td>
+			            <td> x 2</td>
+			          </tr>
+			        </tbody>
+			      </x-table>
+			      </div>
+		   	</div>
+		</div>
 	</div>		
 </template>
 
@@ -311,7 +344,7 @@ import {  Tab, TabItem,Sticky ,Badge,Flexbox, FlexboxItem, Blur,Card,
 	Marquee, MarqueeItem,Masker,Msg,
 	Divider, XButton,Radio,Panel,Popover,Previewer ,Qrcode,
 	Step, StepItem,  Swiper,SwiperItem , TabbarItem,Timeline, TimelineItem,
-	WechatEmotion as Emotion,XCircle,XImg 
+	WechatEmotion as Emotion,XCircle,XProgress,XImg ,XTable 
 	  } from 'vux'
 
 
@@ -429,6 +462,9 @@ export default {
 		     showEmotion: false,
 		     listEmotion:['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '可爱', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极'],
 		    percent1: 10,
+		    percent2: 10,
+		    showXImg: false,
+		    showXTable: false,
 		    listXImg: [
 		        'https://o5omsejde.qnssl.com/demo/test1.jpg',
 		        'https://o5omsejde.qnssl.com/demo/test2.jpg',
@@ -520,7 +556,7 @@ export default {
 		Flow,FlowState,FlowLine,Icon,Spinner,InlineLoading,LoadMore,
 		Marquee, MarqueeItem ,Masker ,Msg ,Divider, XButton,Radio ,Panel,Popover ,Previewer,Qrcode,
 		Step, StepItem, Swiper, SwiperItem, TabbarItem, Timeline, TimelineItem,
-		Emotion,XCircle,XImg 
+		Emotion,XCircle,XProgress,XImg ,XTable 
 		
 
 	}
